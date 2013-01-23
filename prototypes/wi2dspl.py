@@ -140,7 +140,7 @@ def run(template, endpoint, graph, outputdir):
 	saveMeta(outputdir, subindexes,"subindexes")
 #TODO: save index values
 	save(outputdir+"/"+"dataset.xml",template)
-	zipDir(outputdir,"outputdir.zip")
+	zipDir(outputdir,outputdir+".zip")
 #	try:
 #		template = unicode(template)
 #	except UnicodeDecodeError, e:

@@ -16,7 +16,7 @@
       <value>Webindex Statistics</value>
     </name>
     <description>
-      <value>Webindex statistics prototype (non-official)</value>
+      <value>Webindex statistics prototype (non-official).</value>
     </description>
     <url>
       <value>http://thewebindex.org</value>
@@ -33,59 +33,65 @@
   </provider>
 
   <topics>
-    <topic id="geography">
-      <info>
-        <name><value>Geography</value></name>
-      </info>
-    </topic>
-    <topic id="social_indicators">
-      <info>
-        <name><value>Social indicators</value></name>
-      </info>
-      <topic id="population_indicators">
-        <info>
-          <name><value>Population indicators</value></name>
-        </info>
-      </topic>
-      <topic id="poverty_and_income">
-        <info>
-          <name><value>Poverty &amp; income</value></name>
-        </info>
-      </topic>
-      <topic id="health">
-        <info>
-          <name><value>Health</value></name>
-        </info>
-      </topic>
-    </topic>
+	<topic id="webindex_indicators">
+	    <info>
+	      <name>
+		<value>The Webindex as DSPL.</value>
+	      </name>
+	    </info>
+	  </topic>
   </topics>
 
   <concepts>
-    <!-- As noted in the tutorial, this concept should extend quantity:amount.-->
-    <concept id="population">
+    <!-- Each indicator, component, subindex is a concept.-->
+    <concept id="indicator">
       <info>
         <name>
-          <value>Population</value>
+          <value>Primary Indicators</value>
         </name>
         <description>
-          <value>Size of the resident population.</value>
+          <value>Webindex Primary Indicators (own sources).</value>
         </description>
       </info>
-      <topic ref="population_indicators"/>
-      <type ref="integer"/>
+      <topic ref="webindex_indicators"/>
+      <type ref="string"/>
+      <table ref="primary_indicators_slice_table"/>
     </concept>
 
-    <!-- This country concept is defined for educational purposes only. A country
-    concept exists in the Google geo dataset. See:
-    
-    http://code.google.com/apis/publicdata/docs/canonical/geo.html --> 
+
+    <concept id="secondary-indicator">
+      <info>
+        <name>
+          <value>Secondary Indicators</value>
+        </name>
+        <description>
+          <value>Webindex Secondary Indicators (external sources).</value>
+        </description>
+      </info>
+      <topic ref="webindex_indicators"/>
+      <type ref="string"/>
+      <table ref="secondary_indicators_slice_table"/>
+    </concept>
+
+   <concept id="observation">
+      <info>
+        <name>
+          <value>Observations</value>
+        </name>
+        <description>
+          <value>Values retrieved from the primary and secondary indicators.</value>
+        </description>
+      </info>
+      <type ref="float"/>
+    </concept>
+
     <concept id="country" extends="geo:location">
       <info>
         <name>
           <value>Country</value>
         </name>
         <description>
-          <value>My list of countries</value>
+          <value>Webindex list of countries</value>
         </description>
       </info>
       <type ref="string"/>
@@ -98,149 +104,103 @@
         </info>
         <type ref="string"/>
       </property>
-      <table ref="countries_table"/>
-    </concept>
-
-    <!-- This US state concept is defined for educational purposes only. A US state
-      concept exists in the Google geo US dataset. See:
-      
-      http://code.google.com/apis/publicdata/docs/canonical/geo.us.html --> 
-    <concept id="state" extends="geo:location">
-      <info>
-        <name>
-          <value>State</value>
-        </name>
-        <description>
-          <value>US states</value>
-        </description>
-      </info>
-      <type ref="string"/>
-      <property concept="country" isParent="true"/>
-      <table ref="states_table"/>
-    </concept>
-
-    <concept id="gender" extends="entity:entity">
-      <info>
-          <name>
-          <value>Gender</value>
-        </name>
-        <description>
-          <value>Gender, Male or Female</value>
-        </description>
-        <pluralName><value>Genders</value></pluralName>
-        <totalName><value>Both genders</value></totalName>
-      </info>
-      <type ref="string"/>
-      <table ref="genders_table"/>
-    </concept>
-
-    <concept id="unemployment_rate" extends="quantity:rate">
-      <info>
-        <name>
-          <value>unemployment rate</value>
-        </name>
-        <description>
-          <value>The percent of the labor force that is unemployed, not seasonally
-            adjusted.</value>
-        </description>
-        <url><value>http://www.bls.gov/cps/cps_htgm.htm</value></url>
-      </info>
-      <topic ref="social_indicators"/>
-      <type ref="float"/>
-      <attribute id="is_percentage">
-        <type ref="boolean"/>
-        <value>true</value>
-      </attribute>
+      <table ref="countries_slice_table"/>
     </concept>
 
   </concepts>
-
+   
   <slices>
-    <slice id="countries_slice">
+    <slice id="observations_slice">
+      <dimension concept="indicator"/>
       <dimension concept="country"/>
       <dimension concept="time:year"/>
-      <metric concept="population"/>
-      <table ref="countries_slice_table"/>
+      <metric concept="observation"/>
+      <table ref="observations_slice_table"/>
     </slice>
 
-    <slice id="states_slice">
-      <dimension concept="state"/>
-      <dimension concept="time:year"/>
-      <metric concept="population"/>
-      <metric concept="unemployment_rate"/>
-      <table ref="states_slice_table"/>
-    </slice>
-
-    <slice id="countries_gender_slice">
+    <slice id="secondary_observations_slice">
+      <dimension concept="secondary-indicator"/>
       <dimension concept="country"/>
-      <dimension concept="gender"/>
       <dimension concept="time:year"/>
-      <metric concept="population"/>
-      <table ref="countries_gender_slice_table"/>
+      <metric concept="observation"/>
+      <table ref="secondary_observations_slice_table"/>
     </slice>
 
-  </slices>
+
+   </slices>
 
   <tables>
-    <table id="countries_table">
+    <table id="countries_slice_table">
       <column id="country" type="string"/>
       <column id="name" type="string"/>
-      <column id="latitude" type="float"/>
-      <column id="longitude" type="float"/>
+      <column id="lat" type="float"/>
+      <column id="long" type="float"/>
       <data>
         <file format="csv" encoding="utf-8">countries.csv</file>
       </data>
     </table>
 
-    <table id="countries_slice_table">
+<!--Metadata-->
+    <table id="primary_indicators_slice_table">
+      <column id="uri" type="string"/>
+      <column id="indicator" type="string"/>
+      <column id="comment" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">primary-indicators.csv</file>
+      </data>
+    </table>
+
+    <table id="secondary_indicators_slice_table">
+      <column id="secondary-indicator" type="string"/>
+      <column id="comment" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">secondary-indicators.csv</file>
+      </data>
+    </table>
+
+
+    <table id="components_slice_table">
+      <column id="component" type="string"/>
+      <column id="comment" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">components.csv</file>
+      </data>
+    </table>
+
+
+    <table id="indexes_slice_table">
+       <column id="index" type="string"/>
+      <column id="comment" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">indexes.csv</file>
+      </data>
+    </table>
+
+
+<!--Observations-->
+    <table id="observations_slice_table">
+      <column id="observation" type="float"/>
+      <column id="indicator" type="string"/>
       <column id="country" type="string"/>
       <column id="year" type="date" format="yyyy"/>
-      <column id="population" type="integer"/>
       <data>
-        <file format="csv" encoding="utf-8">country_slice.csv</file>
+        <file format="csv" encoding="utf-8">observations.csv</file>
       </data>
     </table>
 
-    <table id="states_table">
-      <column id="state" type="string"/>
-      <column id="name" type="string"/>
-      <column id="country" type="string">
-        <value>US</value>
-      </column>
-      <column id="latitude" type="float"/>
-      <column id="longitude" type="float"/>
-      <data>
-        <file format="csv" encoding="utf-8">states.csv</file>
-      </data>
-    </table>
 
-    <table id="states_slice_table">
-      <column id="state" type="string"/>
-      <column id="year" type="date" format="yyyy"/>
-      <column id="population" type="integer"/>
-      <column id="unemployment_rate" type="float"/>
-      <data>
-        <file format="csv" encoding="utf-8">state_slice.csv</file>
-      </data>
-    </table>
-
-    <table id="genders_table">
-      <column id="gender" type="string"/>
-      <column id="name" type="string"/>
-      <data>
-        <file format="csv" encoding="utf-8">genders.csv</file>
-      </data>
-    </table>
-
-    <table id="countries_gender_slice_table">
+    <table id="secondary_observations_slice_table">
+      <column id="observation" type="float"/>
+      <column id="secondary-indicator" type="string"/>
       <column id="country" type="string"/>
-      <column id="gender" type="string"/>
       <column id="year" type="date" format="yyyy"/>
-      <column id="population" type="integer"/>
       <data>
-        <file format="csv" encoding="utf-8">gender_country_slice.csv</file>
+        <file format="csv" encoding="utf-8">secondary-observations.csv</file>
       </data>
     </table>
+
+
+
   </tables>
 
 </dspl>

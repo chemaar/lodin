@@ -133,14 +133,16 @@ def run(template, endpoint, graph, outputdir):
 	observations = listObservations(endpoint, graph, countries, secondaryIndicators, datasets, listSecondaryYears())
 	saveObservations(outputdir,observations,"secondary-observations")
 	saveCountries(outputdir, countries)	
-	saveMeta(outputdir, primaryIndicators,"indicator")
+	saveMeta(outputdir, primaryIndicators,"primary-indicators")
 	saveMeta(outputdir, secondaryIndicators,"secondary-indicators")
 	saveMeta(outputdir, components,"components")
-#TODO: save component values
-	saveMeta(outputdir, subindexes,"subindexes")
+	saveMeta(outputdir, subindexes,"indexes")
 #TODO: save index values
-	save(outputdir+"/"+"dataset.xml",template)
-	zipDir(outputdir,outputdir+".zip")
+#TODO: save component values
+#FIXME: Error writting in file wi/dataset.xml: 'ascii' codec can't decode byte 0xc3 in position 1070: ordinal not in range(128)
+#	save(outputdir+"/"+"dataset.xml",template)
+#TODO: zip the output dir
+#	zipDir(outputdir,outputdir+".zip")
 #	try:
 #		template = unicode(template)
 #	except UnicodeDecodeError, e:
@@ -154,19 +156,20 @@ def run(template, endpoint, graph, outputdir):
 	return template
 
 def saveObservations(outputdir, observations,name):
-	text = "value,indicator,code,year\n"
+	text = "observation,indicator,code,year\n"
 	for obs in observations:
 		for i in obs:
 			text = text + ",".join([str(k) for k in i]) +"\n"
 	save(outputdir+"/"+name+".csv",text)
 
 def saveCountries(outputdir, countries):
-	text = "label,code,lat,long\n"
+	text = "name,country,lat,long\n"
 	for country in countries:
 		text = text + ",".join(country) +"\n"
 	save(outputdir+"/countries.csv",text)
 
 def saveMeta(outputdir, elements,name):
+	#FIXME: the headers should be parameterized
 	text = "label,comment\n"
 	for element in elements:
 		text = text + ",".join(element) +"\n"

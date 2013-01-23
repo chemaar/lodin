@@ -73,6 +73,39 @@
       <table ref="secondary_indicators_slice_table"/>
     </concept>
 
+
+ <concept id="component">
+      <info>
+        <name>
+          <value>Component</value>
+        </name>
+        <description>
+          <value>Webindex Components (aggregation of indicators).</value>
+        </description>
+      </info>
+      <topic ref="webindex_indicators"/>
+      <type ref="string"/>
+      <table ref="components_slice_table"/>
+    </concept>
+
+
+<concept id="index">
+      <info>
+        <name>
+          <value>Index</value>
+        </name>
+        <description>
+          <value>Webindex (Sub)Indexes (aggregation of components).</value>
+        </description>
+      </info>
+      <topic ref="webindex_indicators"/>
+      <type ref="string"/>
+      <table ref="wi_slice_table"/>
+    </concept>
+
+
+
+
    <concept id="observation">
       <info>
         <name>
@@ -126,6 +159,14 @@
       <table ref="secondary_observations_slice_table"/>
     </slice>
 
+  <slice id="wi_values_slice">
+      <dimension concept="index"/>
+      <dimension concept="country"/>
+      <dimension concept="time:year"/>
+      <metric concept="observation"/>
+      <table ref="wi_values_slice_table"/>
+    </slice>
+
 
    </slices>
 
@@ -142,7 +183,6 @@
 
 <!--Metadata-->
     <table id="primary_indicators_slice_table">
-      <column id="uri" type="string"/>
       <column id="indicator" type="string"/>
       <column id="comment" type="string"/>
       <data>
@@ -168,11 +208,11 @@
     </table>
 
 
-    <table id="indexes_slice_table">
-       <column id="index" type="string"/>
+    <table id="wi_slice_table">
+      <column id="index" type="string"/>
       <column id="comment" type="string"/>
       <data>
-        <file format="csv" encoding="utf-8">indexes.csv</file>
+        <file format="csv" encoding="utf-8">wi-index.csv</file>
       </data>
     </table>
 
@@ -198,6 +238,18 @@
         <file format="csv" encoding="utf-8">secondary-observations.csv</file>
       </data>
     </table>
+
+
+    <table id="wi_values_slice_table">
+      <column id="observation" type="float"/>
+      <column id="country" type="string"/>
+      <column id="year" type="date" format="yyyy"/>
+      <column id="index" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">wi-values.csv</file>
+      </data>
+    </table>
+
 
 
 

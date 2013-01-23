@@ -136,7 +136,7 @@ def run(template, endpoint, graph, outputdir):
 	saveMeta(outputdir, primaryIndicators,"primary-indicators")
 	saveMeta(outputdir, secondaryIndicators,"secondary-indicators")
 	saveMeta(outputdir, components,"components")
-	saveMeta(outputdir, subindexes,"indexes")
+	saveMeta(outputdir, subindexes,"wi-index")
 #TODO: save index values
 #TODO: save component values
 #FIXME: Error writting in file wi/dataset.xml: 'ascii' codec can't decode byte 0xc3 in position 1070: ordinal not in range(128)
